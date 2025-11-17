@@ -1,0 +1,9 @@
+[project]
+name = "inkhaven-feed-viewer"
+version = "0.1.0"
+description = "Displays Inkhaven blog posts in a continuously scrolling browser window"
+requires-python = ">=3.9"
+dependencies = [
+    "playwright>=1.40.0",
+    "httpx>=0.25.0",
+]

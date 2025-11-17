@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 REM Inkhaven Feed Viewer - Startup Script
-REM Starts both the feed monitor and display viewer
+REM Starts the feed monitor, display viewer, and fall25 viewer
 
 echo ==========================================
 echo Starting Inkhaven Feed Viewer
@@ -29,6 +29,17 @@ if exist .viewer.pid (
         exit /b 1
     )
     del .viewer.pid
+)
+
+if exist .fall25.pid (
+    set /p FALL25_PID=<.fall25.pid
+    tasklist /FI "PID eq !FALL25_PID!" 2>NUL | find "!FALL25_PID!" >NUL
+    if not errorlevel 1 (
+        echo WARNING: Fall 25 viewer is already running ^(PID: !FALL25_PID!^)
+        echo    Run kill.bat first to stop existing processes
+        exit /b 1
+    )
+    del .fall25.pid
 )
 
 REM Start feed monitor in background
@@ -61,12 +72,26 @@ for /f "tokens=2" %%a in ('wmic process where "commandline like '%%display_viewe
 echo    Logs: display_viewer.log
 echo.
 
+REM Start fall25 viewer in background
+echo Starting Fall 25 viewer...
+start "InkhavenFall25Viewer" /B cmd /c "uv run -m fall25_viewer > fall25_viewer.log 2>&1"
+timeout /t 1 /nobreak >NUL
+
+REM Get PID of fall25 viewer
+for /f "tokens=2" %%a in ('wmic process where "commandline like '%%fall25_viewer.py%%'" get processid ^| findstr /r "[0-9]"') do (
+    echo    Fall 25 viewer started (PID: %%a)
+    echo %%a > .fall25.pid
+)
+echo    Logs: fall25_viewer.log
+echo.
+
 echo ==========================================
 echo Inkhaven Feed Viewer is running!
 echo ==========================================
 echo.
-echo Monitor logs: type feed_monitor.log
-echo Viewer logs:  type display_viewer.log
+echo Monitor logs:  type feed_monitor.log
+echo Viewer logs:   type display_viewer.log
+echo Fall 25 logs:  type fall25_viewer.log
 echo.
 echo To view logs continuously: powershell Get-Content feed_monitor.log -Wait
 echo To stop: kill.bat

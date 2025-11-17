@@ -119,10 +119,12 @@ pip install uv
 This launches:
 1. **Feed Monitor** - Checks for new posts every 30 seconds
 2. **Display Viewer** - Shows posts in browser window
+3. **Fall 25 Viewer** - Displays Fall 25 page with auto-refresh
 
-Both run in the background. Logs saved to:
+All run in the background. Logs saved to:
 - `feed_monitor.log`
 - `display_viewer.log`
+- `fall25_viewer.log`
 
 ### Stop Everything
 ```bash
@@ -141,6 +143,11 @@ uv run -m feed_monitor
 **Start display viewer only:**
 ```bash
 uv run -m display_viewer
+```
+
+**View Fall 25 page (auto-refreshes every 30s):**
+```bash
+uv run -m fall25_viewer
 ```
 
 **Stop with Ctrl+C** in each terminal.
@@ -234,7 +241,8 @@ This ensures:
 - `seen_posts.json` - Tracks which posts have been discovered
 - `feed_monitor.log` - Feed monitor output
 - `display_viewer.log` - Display viewer output
-- `.monitor.pid`, `.viewer.pid` - Process IDs for kill script
+- `fall25_viewer.log` - Fall 25 viewer output
+- `.monitor.pid`, `.viewer.pid`, `.fall25.pid` - Process IDs for kill script
 
 ## Troubleshooting
 
@@ -264,6 +272,7 @@ inkhaven-feed/
 ├── config.py              # All configuration settings
 ├── feed_monitor.py        # Monitors feed for new posts
 ├── display_viewer.py      # Displays posts in browser
+├── fall25_viewer.py       # Views Fall 25 page with auto-refresh
 ├── run.sh                 # Start script (macOS/Linux)
 ├── kill.sh                # Stop script (macOS/Linux)
 ├── run.bat                # Start script (Windows)

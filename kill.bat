@@ -1,6 +1,6 @@
 @echo off
 REM Inkhaven Feed Viewer - Kill Script
-REM Stops both the feed monitor and display viewer
+REM Stops the feed monitor, display viewer, and fall25 viewer
 
 echo ==========================================
 echo Stopping Inkhaven Feed Viewer
@@ -46,6 +46,27 @@ if exist .viewer.pid (
 REM Kill any remaining display_viewer.py processes
 for /f "tokens=2" %%a in ('wmic process where "commandline like '%%display_viewer.py%%'" get processid 2^>NUL ^| findstr /r "[0-9]"') do (
     echo Found additional display viewer process: %%a
+    echo    Killing...
+    taskkill /PID %%a /F >NUL 2>&1
+    set /a KILLED+=1
+)
+
+REM Kill fall25 viewer by PID file
+if exist .fall25.pid (
+    set /p FALL25_PID=<.fall25.pid
+    echo Checking for Fall 25 viewer with PID: !FALL25_PID!...
+    tasklist /FI "PID eq !FALL25_PID!" 2>NUL | find /I "python.exe">NUL
+    if "!ERRORLEVEL!"=="0" (
+        echo Stopping Fall 25 viewer (PID: !FALL25_PID!)...
+        taskkill /PID !FALL25_PID! /F >NUL 2>&1
+        set /a KILLED+=1
+    )
+    del .fall25.pid
+)
+
+REM Kill any remaining fall25_viewer.py processes
+for /f "tokens=2" %%a in ('wmic process where "commandline like '%%fall25_viewer.py%%'" get processid 2^>NUL ^| findstr /r "[0-9]"') do (
+    echo Found additional Fall 25 viewer process: %%a
     echo    Killing...
     taskkill /PID %%a /F >NUL 2>&1
     set /a KILLED+=1

@@ -33,6 +33,8 @@ from config import (
     BROWSER_TYPE,
 )
 
+ZOOM_LEVEL = 0.67  # 67% zoom (zoom out)
+
 
 class DisplayViewer:
     """
@@ -259,6 +261,9 @@ class DisplayViewer:
         try:
             await page.goto(url, wait_until="domcontentloaded", timeout=PAGE_LOAD_TIMEOUT)
             await asyncio.sleep(PAGE_SETTLE_TIME)  # Let the page settle
+
+            # Apply zoom level
+            await page.evaluate(f"document.body.style.zoom = {ZOOM_LEVEL}")
 
             # Add a skip button overlay
             await self.add_skip_button(page)

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Inkhaven Feed Viewer - Kill Script
-# Stops both the feed monitor and display viewer
+# Stops the feed monitor, display viewer, and fall25 viewer
 
 echo "=========================================="
 echo "Stopping Inkhaven Feed Viewer"
@@ -47,6 +47,26 @@ if [ ! -z "$VIEWER_PIDS" ]; then
     echo "🖥️  Found additional display viewer processes: $VIEWER_PIDS"
     echo "   Killing..."
     pkill -f "display_viewer.py"
+    KILLED=$((KILLED + 1))
+fi
+
+# Kill fall25 viewer
+if [ -f .fall25.pid ]; then
+    FALL25_PID=$(cat .fall25.pid)
+    if ps -p $FALL25_PID > /dev/null 2>&1; then
+        echo "📅 Stopping Fall 25 viewer (PID: $FALL25_PID)..."
+        kill $FALL25_PID
+        KILLED=$((KILLED + 1))
+    fi
+    rm .fall25.pid
+fi
+
+# Also kill by process name in case PID file is missing
+FALL25_PIDS=$(pgrep -f "fall25_viewer.py")
+if [ ! -z "$FALL25_PIDS" ]; then
+    echo "📅 Found additional Fall 25 viewer processes: $FALL25_PIDS"
+    echo "   Killing..."
+    pkill -f "fall25_viewer.py"
     KILLED=$((KILLED + 1))
 fi
 

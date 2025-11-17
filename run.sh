@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Inkhaven Feed Viewer - Startup Script
-# Starts both the feed monitor and display viewer
+# Starts the feed monitor, display viewer, and fall25 viewer
 
 echo "=========================================="
 echo "Starting Inkhaven Feed Viewer"
@@ -17,6 +17,12 @@ fi
 
 if pgrep -f "display_viewer.py" > /dev/null; then
     echo "⚠️  Display viewer is already running!"
+    echo "   Run ./kill.sh first to stop existing processes"
+    exit 1
+fi
+
+if pgrep -f "fall25_viewer.py" > /dev/null; then
+    echo "⚠️  Fall 25 viewer is already running!"
     echo "   Run ./kill.sh first to stop existing processes"
     exit 1
 fi
@@ -40,16 +46,26 @@ echo "   Display viewer started (PID: $VIEWER_PID)"
 echo "   Logs: display_viewer.log"
 echo ""
 
+# Start fall25 viewer in background
+echo "📅 Starting Fall 25 viewer..."
+uv run -m fall25_viewer > fall25_viewer.log 2>&1 &
+FALL25_PID=$!
+echo "   Fall 25 viewer started (PID: $FALL25_PID)"
+echo "   Logs: fall25_viewer.log"
+echo ""
+
 # Save PIDs to file for kill script
 echo "$MONITOR_PID" > .monitor.pid
 echo "$VIEWER_PID" > .viewer.pid
+echo "$FALL25_PID" > .fall25.pid
 
 echo "=========================================="
 echo "✅ Inkhaven Feed Viewer is running!"
 echo "=========================================="
 echo ""
-echo "📊 Monitor logs: tail -f feed_monitor.log"
-echo "🖥️  Viewer logs:  tail -f display_viewer.log"
+echo "📊 Monitor logs:  tail -f feed_monitor.log"
+echo "🖥️  Viewer logs:   tail -f display_viewer.log"
+echo "📅 Fall 25 logs:  tail -f fall25_viewer.log"
 echo ""
 echo "To stop: ./kill.sh"
 echo ""

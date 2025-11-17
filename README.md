@@ -5,6 +5,9 @@ A smart feed reader that displays [Inkhaven](https://www.inkhaven.blog/) blog po
 ## Quick Start
 
 ```bash
+# Install uv (if you don't have it)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # Clone the repository
 git clone https://github.com/dpaleka/inkhaven-feed.git
 cd inkhaven-feed

@@ -107,14 +107,49 @@ class DisplayViewer:
         """
         post_id = post.get("id")
 
-        # Factor 1: Recency of post (exponential decay based on age)
+        # Factor 1: Recency of post (staggered decay, not exponential)
+        # Weight for each day (day 0 = today, day 1 = yesterday, etc.)
+        RECENCY_WEIGHTS = {
+            0: 1.0,
+            1: 0.91,
+            2: 0.4,
+            3: 0.32,
+            4: 0.25,
+            5: 0.25,
+            6: 0.25,
+            7: 0.25,
+            8: 0.15,
+            9: 0.15,
+            10: 0.15,
+            11: 0.15,
+            12: 0.15,
+            13: 0.15,
+            14: 0.15,
+            15: 0.08,
+            16: 0.08,
+            17: 0.08,
+            18: 0.08,
+            19: 0.08,
+            20: 0.08,
+            21: 0.08,
+            22: 0.08,
+            23: 0.08,
+            24: 0.08,
+            25: 0.08,
+            26: 0.08,
+            27: 0.08,
+            28: 0.08,
+            29: 0.08,
+            30: 0.08,
+        }
+        DEFAULT_RECENCY_WEIGHT = 0.03  # For days > 30
+
         try:
             post_date_str = post.get("date_modified", "")
             post_date = datetime.fromisoformat(post_date_str.replace('Z', '+00:00'))
             days_old = (datetime.now(post_date.tzinfo) - post_date).days
-            # Strong exponential decay: day 0=1.0, day 1=0.74, day 2=0.54, day 3=0.4
-            # Half-life of ~2.27 days for aggressive prioritization of recent posts
-            recency_weight = 2 ** (-days_old / 2.27)
+
+            recency_weight = RECENCY_WEIGHTS.get(days_old, DEFAULT_RECENCY_WEIGHT)
         except:
             recency_weight = 0.1  # Default low weight if date parsing fails
 

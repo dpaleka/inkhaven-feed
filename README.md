@@ -27,8 +27,14 @@ uv run -m playwright install chromium
 ### Windows
 
 ```powershell
+# Install Git (if you don't have it)
+winget install Git.Git
+
 # Install uv (if you don't have it)
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Add uv to PATH for current session
+$env:Path += ";$env:USERPROFILE\.cargo\bin"
 
 # Clone the repository
 git clone https://github.com/dpaleka/inkhaven-feed.git
@@ -43,6 +49,8 @@ uv run -m playwright install chromium
 # Start the app
 run.bat
 ```
+
+**Note:** After installing uv, you may need to restart your PowerShell/terminal for the PATH changes to take effect permanently.
 
 That's it! A browser window will open and start displaying Inkhaven posts.
 

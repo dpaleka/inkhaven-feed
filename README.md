@@ -26,6 +26,7 @@ uv run -m playwright install chromium
 
 ### Windows
 
+**Setup (one time):**
 ```powershell
 # Install Git (if you don't have it)
 winget install Git.Git
@@ -33,30 +34,36 @@ winget install Git.Git
 # Install uv (if you don't have it)
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-# Add uv to PATH for current session
-$env:Path += ";$env:USERPROFILE\.cargo\bin"
-
-# Clone the repository
+# Restart PowerShell, then:
 git clone https://github.com/dpaleka/inkhaven-feed.git
 cd inkhaven-feed
-
-# Install dependencies
 uv sync
-
-# Install Playwright browser
 uv run -m playwright install chromium
-
-# Start the app
-.\run.bat
 ```
 
-**Note:** After installing uv, you may need to restart your PowerShell/terminal for the PATH changes to take effect permanently.
+**Running the app:**
 
-That's it! A browser window will open and start displaying Inkhaven posts.
+Open **two PowerShell windows** in the `inkhaven-feed` directory.
+
+**Window 1 - Feed Monitor:**
+```powershell
+uv run -m feed_monitor
+```
+
+**Window 2 - Display Viewer:**
+```powershell
+uv run -m display_viewer
+```
+
+A browser window will open and start displaying Inkhaven posts.
+
+**To stop:** Press `Ctrl+C` in each PowerShell window.
+
+---
 
 **To stop:**
 - **macOS/Linux:** `./kill.sh`
-- **Windows:** `.\kill.bat`
+- **Windows:** Press `Ctrl+C` in both PowerShell windows
 
 ## What It Does
 

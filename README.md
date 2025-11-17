@@ -40,18 +40,15 @@ uv sync
 # Install Playwright browser
 uv run -m playwright install chromium
 
-# Start the app (run both in separate terminals)
-uv run -m feed_monitor
-uv run -m display_viewer
+# Start the app
+run.bat
 ```
-
-**Note:** The `./run.sh` script is for macOS/Linux only. On Windows, run the two commands separately in different terminals.
 
 That's it! A browser window will open and start displaying Inkhaven posts.
 
 **To stop:**
 - **macOS/Linux:** `./kill.sh`
-- **Windows:** Press `Ctrl+C` in each terminal window
+- **Windows:** `kill.bat`
 
 ## What It Does
 
@@ -252,8 +249,10 @@ inkhaven-feed/
 ├── config.py              # All configuration settings
 ├── feed_monitor.py        # Monitors feed for new posts
 ├── display_viewer.py      # Displays posts in browser
-├── run.sh                 # Start script
-├── kill.sh                # Stop script
+├── run.sh                 # Start script (macOS/Linux)
+├── kill.sh                # Stop script (macOS/Linux)
+├── run.bat                # Start script (Windows)
+├── kill.bat               # Stop script (Windows)
 ├── pyproject.toml         # Python dependencies
 ├── README.md              # This file
 └── RUN.md                 # Detailed usage guide
@@ -270,7 +269,7 @@ Issues and pull requests welcome!
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License
 
 ## Acknowledgments
 

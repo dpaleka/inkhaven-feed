@@ -6,7 +6,7 @@ A smart feed reader that displays [Inkhaven](https://www.inkhaven.blog/) blog po
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/inkhaven-feed.git
+git clone https://github.com/dpaleka/inkhaven-feed.git
 cd inkhaven-feed
 
 # Install dependencies

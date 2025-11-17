@@ -170,16 +170,36 @@ class DisplayViewer:
     def get_next_post(self):
         """
         Select next post using weighted random selection.
-        Prioritizes unseen, recent, and not-recently-shown posts.
+
+        Priority system:
+        1. If any posts were discovered in last 10 minutes, pick ONLY from those
+        2. Otherwise, use normal weighted random selection
         """
         if not self.posts:
             return None
 
-        # Calculate weights for all posts
-        weights = [self.calculate_post_weight(post) for post in self.posts]
+        # Check for recently discovered posts (within last 10 minutes)
+        DISCOVERY_PRIORITY_WINDOW = 10 * 60  # 10 minutes in seconds
+        current_time = time.time()
+
+        recently_discovered = [
+            post for post in self.posts
+            if post.get('discovered_at', 0) > 0 and
+               (current_time - post.get('discovered_at', 0)) < DISCOVERY_PRIORITY_WINDOW
+        ]
+
+        # If we have recently discovered posts, pick ONLY from those
+        if recently_discovered:
+            print(f"🆕 Prioritizing {len(recently_discovered)} recently discovered post(s)")
+            posts_to_choose_from = recently_discovered
+        else:
+            posts_to_choose_from = self.posts
+
+        # Calculate weights for eligible posts
+        weights = [self.calculate_post_weight(post) for post in posts_to_choose_from]
 
         # Weighted random selection
-        selected_post = random.choices(self.posts, weights=weights, k=1)[0]
+        selected_post = random.choices(posts_to_choose_from, weights=weights, k=1)[0]
 
         return selected_post
 
@@ -339,6 +359,9 @@ class DisplayViewer:
             # Create page with no viewport restrictions (full width rendering)
             # This allows the page to use the full window width
             page = await browser.new_page(viewport=None, no_viewport=True)
+
+            # Set zoom to 80% to fit more content
+            await page.evaluate("document.body.style.zoom = '0.8'")
 
             # Load initial posts from queue
             print("Loading posts from queue...")

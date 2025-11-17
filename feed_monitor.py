@@ -127,6 +127,8 @@ class FeedMonitor:
 
             # If this is a brand new post we haven't seen before
             if post_id not in self.seen_posts:
+                # Mark when this post was discovered
+                item['discovered_at'] = time.time()
                 new_posts.append(item)
                 self.seen_posts.add(post_id)
             else:

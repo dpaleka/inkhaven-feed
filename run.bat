@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 REM Inkhaven Feed Viewer - Startup Script
 REM Starts both the feed monitor and display viewer
 
@@ -7,28 +8,27 @@ echo Starting Inkhaven Feed Viewer
 echo ==========================================
 echo.
 
-REM Check if feed monitor is already running
-tasklist /FI "IMAGENAME eq python.exe" /FI "WINDOWTITLE eq feed_monitor*" 2>NUL | find /I /N "python.exe">NUL
-if "%ERRORLEVEL%"=="0" (
-    echo WARNING: Feed monitor may already be running!
-    echo    Run kill.bat first to stop existing processes
-    exit /b 1
+REM Check if PID files exist and processes are still running
+if exist .monitor.pid (
+    set /p MONITOR_PID=<.monitor.pid
+    tasklist /FI "PID eq !MONITOR_PID!" 2>NUL | find "!MONITOR_PID!" >NUL
+    if not errorlevel 1 (
+        echo WARNING: Feed monitor is already running ^(PID: !MONITOR_PID!^)
+        echo    Run kill.bat first to stop existing processes
+        exit /b 1
+    )
+    del .monitor.pid
 )
 
-REM Check more broadly for feed_monitor.py in command line
-wmic process where "commandline like '%%feed_monitor.py%%'" get processid 2>NUL | findstr /r "[0-9]" >NUL
-if "%ERRORLEVEL%"=="0" (
-    echo WARNING: Feed monitor is already running!
-    echo    Run kill.bat first to stop existing processes
-    exit /b 1
-)
-
-REM Check for display viewer
-wmic process where "commandline like '%%display_viewer.py%%'" get processid 2>NUL | findstr /r "[0-9]" >NUL
-if "%ERRORLEVEL%"=="0" (
-    echo WARNING: Display viewer is already running!
-    echo    Run kill.bat first to stop existing processes
-    exit /b 1
+if exist .viewer.pid (
+    set /p VIEWER_PID=<.viewer.pid
+    tasklist /FI "PID eq !VIEWER_PID!" 2>NUL | find "!VIEWER_PID!" >NUL
+    if not errorlevel 1 (
+        echo WARNING: Display viewer is already running ^(PID: !VIEWER_PID!^)
+        echo    Run kill.bat first to stop existing processes
+        exit /b 1
+    )
+    del .viewer.pid
 )
 
 REM Start feed monitor in background

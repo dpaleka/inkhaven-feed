@@ -47,7 +47,7 @@ uv sync
 uv run -m playwright install chromium
 
 # Start the app
-run.bat
+.\run.bat
 ```
 
 **Note:** After installing uv, you may need to restart your PowerShell/terminal for the PATH changes to take effect permanently.
@@ -56,7 +56,7 @@ That's it! A browser window will open and start displaying Inkhaven posts.
 
 **To stop:**
 - **macOS/Linux:** `./kill.sh`
-- **Windows:** `kill.bat`
+- **Windows:** `.\kill.bat`
 
 ## What It Does
 

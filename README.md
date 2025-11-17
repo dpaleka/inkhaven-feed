@@ -4,6 +4,8 @@ A smart feed reader that displays [Inkhaven](https://www.inkhaven.blog/) blog po
 
 ## Quick Start
 
+### macOS / Linux
+
 ```bash
 # Install uv (if you don't have it)
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -22,12 +24,34 @@ uv run -m playwright install chromium
 ./run.sh
 ```
 
+### Windows
+
+```powershell
+# Install uv (if you don't have it)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Clone the repository
+git clone https://github.com/dpaleka/inkhaven-feed.git
+cd inkhaven-feed
+
+# Install dependencies
+uv sync
+
+# Install Playwright browser
+uv run -m playwright install chromium
+
+# Start the app (run both in separate terminals)
+uv run -m feed_monitor
+uv run -m display_viewer
+```
+
+**Note:** The `./run.sh` script is for macOS/Linux only. On Windows, run the two commands separately in different terminals.
+
 That's it! A browser window will open and start displaying Inkhaven posts.
 
 **To stop:**
-```bash
-./kill.sh
-```
+- **macOS/Linux:** `./kill.sh`
+- **Windows:** Press `Ctrl+C` in each terminal window
 
 ## What It Does
 

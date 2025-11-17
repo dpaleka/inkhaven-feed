@@ -5,6 +5,7 @@ Displays posts from the post_queue.json file in a browser window with continuous
 Feed monitoring is handled separately by feed_monitor.py.
 """
 
+import sys
 import asyncio
 import json
 import time
@@ -12,6 +13,10 @@ import random
 from datetime import datetime, timedelta
 from pathlib import Path
 from playwright.async_api import async_playwright, Page
+
+# Force unbuffered output
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
 from config import (
     SCROLL_SPEED,
     SCROLL_INTERVAL,
@@ -75,6 +80,21 @@ class DisplayViewer:
         if post_id:
             self.post_history[post_id] = time.time()
 
+    def calculate_time_for_post(self, post):
+        """
+        Calculate how long to spend on a post based on its characteristics.
+
+        Currently just returns TIME_PER_POST for all posts.
+        In the future, this could be adjusted based on:
+        - Post length/word count
+        - Content type (text vs images)
+        - Reading difficulty
+        - etc.
+
+        Returns: time in seconds to spend on this post
+        """
+        return TIME_PER_POST
+
     def calculate_post_weight(self, post):
         """
         Calculate selection weight for a post based on:
@@ -133,6 +153,7 @@ class DisplayViewer:
         Scrolls down slowly and returns to top when reaching bottom.
         Checks for skip button clicks.
         """
+        print(f"DEBUG: scroll_page called with duration={duration:.2f}s, SCROLL_SPEED={SCROLL_SPEED}, SCROLL_INTERVAL={SCROLL_INTERVAL}")
         start_time = time.time()
 
         while time.time() - start_time < duration:
@@ -297,8 +318,10 @@ class DisplayViewer:
 
             # Display the first post
             current_post = self.get_next_post()
+            current_post_duration = 0
             if current_post:
                 await self.display_post(page, current_post)
+                current_post_duration = self.calculate_time_for_post(current_post)
 
             last_queue_check = time.time()
             last_post_change = time.time()
@@ -317,10 +340,10 @@ class DisplayViewer:
                             self.current_post_index = 0
                         last_queue_check = current_time
 
-                    # Switch posts after TIME_PER_POST seconds, but enforce MAX_TIME_PER_POST
+                    # Switch posts after calculated duration, but enforce MAX_TIME_PER_POST
                     time_on_current_post = current_time - last_post_change
                     should_switch = (
-                        time_on_current_post >= TIME_PER_POST or
+                        time_on_current_post >= current_post_duration or
                         time_on_current_post >= MAX_TIME_PER_POST
                     )
 
@@ -329,6 +352,8 @@ class DisplayViewer:
                         next_post = self.get_next_post()
                         if next_post:
                             await self.display_post(page, next_post)
+                            current_post_duration = self.calculate_time_for_post(next_post)
+                            current_post = next_post
                             last_post_change = current_time
                         else:
                             # No posts available, reload queue
@@ -338,6 +363,8 @@ class DisplayViewer:
                                 next_post = self.get_next_post()
                                 if next_post:
                                     await self.display_post(page, next_post)
+                                    current_post_duration = self.calculate_time_for_post(next_post)
+                                    current_post = next_post
                                     last_post_change = current_time
                             else:
                                 # Still no posts, wait a bit
@@ -358,13 +385,17 @@ class DisplayViewer:
                             next_post = self.get_next_post()
                             if next_post:
                                 await self.display_post(page, next_post)
+                                current_post_duration = self.calculate_time_for_post(next_post)
+                                current_post = next_post
                                 last_post_change = current_time
                             continue
                     except:
                         pass  # Ignore errors checking button state
 
                     # Continuously scroll for a short duration
-                    scroll_duration = min(1.0, TIME_PER_POST - (current_time - last_post_change))
+                    time_elapsed = current_time - last_post_change
+                    scroll_duration = min(1.0, current_post_duration - time_elapsed)
+                    print(f"DEBUG: current_post_duration={current_post_duration}, time_elapsed={time_elapsed:.1f}, scroll_duration={scroll_duration:.1f}")
                     if scroll_duration > 0:
                         await self.scroll_page(page, scroll_duration)
 
@@ -377,13 +408,14 @@ class DisplayViewer:
 
 
 if __name__ == "__main__":
-    print("="*60)
-    print("Inkhaven Display Viewer")
-    print("="*60)
-    print(f"Queue file: {QUEUE_FILE}")
-    print(f"Time per post: {TIME_PER_POST}s (max {MAX_TIME_PER_POST}s)")
-    print(f"Scroll speed: {SCROLL_SPEED}px every {SCROLL_INTERVAL}s")
-    print("="*60)
+    print("="*60, flush=True)
+    print("Inkhaven Display Viewer STARTING", flush=True)
+    print("="*60, flush=True)
+    print(f"Queue file: {QUEUE_FILE}", flush=True)
+    print(f"Time per post: {TIME_PER_POST}s (max {MAX_TIME_PER_POST}s)", flush=True)
+    print(f"Scroll speed: {SCROLL_SPEED}px every {SCROLL_INTERVAL}s", flush=True)
+    print("="*60, flush=True)
 
     viewer = DisplayViewer()
+    print("Running viewer...", flush=True)
     asyncio.run(viewer.run())

@@ -112,8 +112,9 @@ class DisplayViewer:
             post_date_str = post.get("date_modified", "")
             post_date = datetime.fromisoformat(post_date_str.replace('Z', '+00:00'))
             days_old = (datetime.now(post_date.tzinfo) - post_date).days
-            # Exponential decay: newer posts get higher weight
-            recency_weight = 2 ** (-days_old / 30)  # Halves every 30 days
+            # Strong exponential decay: day 0=1.0, day 1=0.74, day 2=0.54, day 3=0.4
+            # Half-life of ~2.27 days for aggressive prioritization of recent posts
+            recency_weight = 2 ** (-days_old / 2.27)
         except:
             recency_weight = 0.1  # Default low weight if date parsing fails
 

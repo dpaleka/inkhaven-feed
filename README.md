@@ -65,12 +65,6 @@ A browser window will open and start displaying Inkhaven posts.
 - **macOS/Linux:** `./kill.sh`
 - **Windows:** Press `Ctrl+C` in both PowerShell windows
 
-## Screenshot
-
-![Inkhaven Feed Viewer in action](screenshot.png)
-
-*The feed viewer displaying an Inkhaven post with smooth auto-scrolling and a subtle skip button in the top-right corner.*
-
 ## What It Does
 
 - **Monitors** the Inkhaven feed every 30 seconds for new posts

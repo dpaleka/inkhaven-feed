@@ -57,12 +57,12 @@ QUEUE_CHECK_INTERVAL = 5
 # Lower = slower, smoother scrolling (more relaxed reading)
 # Higher = faster scrolling (scan content quickly)
 # Recommended: 1-3 pixels
-SCROLL_SPEED = 2
+SCROLL_SPEED = 1  # Reduced to 1/3 for slower scrolling
 
 # Time between each scroll step (in seconds)
 # Lower = faster scrolling, higher = slower scrolling
 # Recommended: 0.05-0.1 seconds
-SCROLL_INTERVAL = 0.05
+SCROLL_INTERVAL = 0.03  # Reduced for smoother, more frequent updates
 
 
 # ==============================================================================

@@ -279,8 +279,9 @@ class DisplayViewer:
                 args=browser_args
             )
 
-            # Create page with viewport matching window size
-            page = await browser.new_page(viewport={'width': WINDOW_WIDTH, 'height': WINDOW_HEIGHT})
+            # Create page with no viewport restrictions (full width rendering)
+            # This allows the page to use the full window width
+            page = await browser.new_page(viewport=None, no_viewport=True)
 
             # Load initial posts from queue
             print("Loading posts from queue...")

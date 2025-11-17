@@ -52,3 +52,10 @@ seen_posts.json
 test_*.py
 test_*.json
 diverse_test_queue.json
+
+# Downloaded feed data
+feed.json
+
+# Old/deprecated scripts
+feed_viewer.py
+queue_consumer.py

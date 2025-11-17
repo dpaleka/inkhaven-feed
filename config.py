@@ -35,7 +35,7 @@ BROWSER_TYPE = "chromium"
 # How long to display each post before moving to the next (in seconds)
 # This is the default time - you can always skip earlier with the skip button
 # Recommended: 60-120 seconds
-TIME_PER_POST = 5
+TIME_PER_POST = 10
 
 # Maximum time to spend on any single post (in seconds)
 # Safety limit to prevent getting stuck on one post forever
@@ -56,13 +56,14 @@ QUEUE_CHECK_INTERVAL = 5
 # How many pixels to scroll per step
 # Lower = slower, smoother scrolling (more relaxed reading)
 # Higher = faster scrolling (scan content quickly)
-# Recommended: 1-3 pixels
-SCROLL_SPEED = 1  # Reduced to 1/3 for slower scrolling
+# Can use fractional values like 0.5 for very slow scrolling
+# Recommended: 0.3-3 pixels
+SCROLL_SPEED = 0.3  # Very slow, relaxed reading pace
 
 # Time between each scroll step (in seconds)
 # Lower = faster scrolling, higher = slower scrolling
 # Recommended: 0.05-0.1 seconds
-SCROLL_INTERVAL = 0.03  # Reduced for smoother, more frequent updates
+SCROLL_INTERVAL = 0.01  # Very smooth updates
 
 
 # ==============================================================================

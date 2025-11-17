@@ -360,9 +360,6 @@ class DisplayViewer:
             # This allows the page to use the full window width
             page = await browser.new_page(viewport=None, no_viewport=True)
 
-            # Set zoom to 80% to fit more content
-            await page.evaluate("document.body.style.zoom = '0.8'")
-
             # Load initial posts from queue
             print("Loading posts from queue...")
             self.posts = self.load_queue()

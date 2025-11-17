@@ -43,7 +43,7 @@ uv run -m playwright install chromium
 
 **Running the app:**
 
-Open **two PowerShell windows** in the `inkhaven-feed` directory.
+Open **three PowerShell windows** in the `inkhaven-feed` directory.
 
 **Window 1 - Feed Monitor:**
 ```powershell
@@ -55,7 +55,12 @@ uv run -m feed_monitor
 uv run -m display_viewer
 ```
 
-A browser window will open and start displaying Inkhaven posts.
+**Window 3 - Fall 25 Viewer:**
+```powershell
+uv run -m fall25_viewer
+```
+
+Browser windows will open and start displaying Inkhaven posts.
 
 **To stop:** Press `Ctrl+C` in each PowerShell window.
 
@@ -63,7 +68,7 @@ A browser window will open and start displaying Inkhaven posts.
 
 **To stop:**
 - **macOS/Linux:** `./kill.sh`
-- **Windows:** Press `Ctrl+C` in both PowerShell windows
+- **Windows:** Press `Ctrl+C` in all three PowerShell windows
 
 ## What It Does
 

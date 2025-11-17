@@ -3,6 +3,8 @@ Configuration file for Inkhaven Feed Viewer
 All timing, sizing, and behavior settings in one place
 """
 
+import platform
+
 # ==============================================================================
 # FEED MONITORING SETTINGS
 # ==============================================================================
@@ -67,11 +69,24 @@ SCROLL_INTERVAL = 0.05
 # BROWSER WINDOW SETTINGS
 # ==============================================================================
 
+# Detect platform
+IS_WINDOWS = platform.system() == "Windows"
+IS_MAC = platform.system() == "Darwin"
+
 # Window dimensions (in pixels)
-# 800x1200 is good for side-by-side viewing on a typical screen
-# Adjust based on your screen size and preference
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 1200
+# Platform-specific sizing for optimal display
+if IS_WINDOWS:
+    # Windows with 3m diagonal screen - needs a bit more than half
+    WINDOW_WIDTH = 1100   # More than half of typical Windows display
+    WINDOW_HEIGHT = 1400  # Taller for better viewing
+elif IS_MAC:
+    # macOS - half screen width for side-by-side viewing
+    WINDOW_WIDTH = 800
+    WINDOW_HEIGHT = 1200
+else:
+    # Default for Linux and other platforms
+    WINDOW_WIDTH = 800
+    WINDOW_HEIGHT = 1200
 
 # Window position on screen (in pixels from top-left corner)
 # 0,0 = top-left corner of your screen
